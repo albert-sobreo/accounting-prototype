@@ -24,7 +24,7 @@ class Account_Sub_Group(models.Model):
 class Child_Account(models.Model):
     code = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
-    account_classification = models.IntegerField()
+    account_classification = models.ForeignKey(Account_Sub_Group, on_delete=models.PROTECT, null=True, blank=True)
     me = models.ForeignKey('self',null=True,blank=True, on_delete=models.PROTECT)
     contra = models.BooleanField()
     amount = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True)
