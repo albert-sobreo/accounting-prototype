@@ -12,6 +12,9 @@ class Account_Group(models.Model):
         verbose_name = "Account Group"
         verbose_name_plural = "Account Groups"
 
+    def __str__(self):
+        return self.name
+
 class Account_Sub_Group(models.Model):
     code = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
@@ -20,6 +23,9 @@ class Account_Sub_Group(models.Model):
     class Meta:
         verbose_name = "Account Sub-Group"
         verbose_name_plural = "Account Sub-Groups"
+
+    def __str__(self):
+        return self.name
 
 class Child_Account(models.Model):
     code = models.CharField(max_length=100)
@@ -33,6 +39,9 @@ class Child_Account(models.Model):
         verbose_name = "Child Account"
         verbose_name_plural = "Child Accounts"
 
+    def __str__(self):
+        return self.name
+
 class Party(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
@@ -41,6 +50,9 @@ class Party(models.Model):
     class Meta:
         verbose_name = "Party"
         verbose_name_plural = "Parties"
+
+    def __str__(self):
+        return self.name
 
 class Inventory_Item(models.Model):
     code = models.CharField(max_length=100)
@@ -53,3 +65,6 @@ class Inventory_Item(models.Model):
     class Meta:
         verbose_name = "Inventory Item"
         verbose_name_plural = "Inventory Items"
+    
+    def __str__(self):
+        return self.name

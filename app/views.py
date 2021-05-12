@@ -11,15 +11,19 @@ def test(request):
 
 class RootAPI(viewsets.ModelViewSet):
     serializer_class = RootSZ
-    queryset = Account_Group.objects.all().order_by('pk')
+    queryset = Account_Group.objects.all().order_by('code')
+
+class RootNestedAPI(viewsets.ModelViewSet):
+    serializer_class = RootNestedSZ
+    queryset = Account_Group.objects.all().order_by('code')
 
 class SubGroupAPI(viewsets.ModelViewSet):
     serializer_class = Sub_GroupSZ
-    queryset = Account_Sub_Group.objects.all().order_by('pk')
+    queryset = Account_Sub_Group.objects.all().order_by('code')
 
 class SubNestedAPI(viewsets.ModelViewSet):
     serializer_class = Sub_GroupNestedSZ
-    queryset = Account_Sub_Group.objects.all().order_by('pk')
+    queryset = Account_Sub_Group.objects.all().order_by('code')
 
 class ChildAPI(viewsets.ModelViewSet):
     serializer_class = ChildSZ
