@@ -4,12 +4,12 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r"root", views.UserAPI, 'user')
-router.register(r"sub-group", views.WorkAPI, 'work')
-router.register(r"child", views.BugAPI, 'bug')
+router.register(r"root", views.RootAPI, 'user')
+router.register(r"sub-group", views.SubGroupAPI, 'work')
+router.register(r"child", views.ChildAPI, 'bug')
 
-router.register(r"nested-sub", views.WorkNestedAPI, 'nested-work')
-router.register(r"nested-child", views.BugNestedAPI, 'nested-bug')
+router.register(r"nested-sub", views.SubNestedAPI, 'nested-work')
+router.register(r"nested-child", views.ChildNestedAPI, 'nested-bug')
 
 
 
