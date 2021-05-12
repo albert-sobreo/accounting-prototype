@@ -10,8 +10,44 @@
 
 <!-- MAIN BODY -->
 
-<div class="container">
-    HELLO WORLD
+<div class="container" id="app">
+    <!-- TITLE AND BUTTONS -->
+    <div class="d-flex align-items-center mb-3">
+        <span class="font-size-18 font-bold mr-1">Chart of Accounts</span>
+        <button class="btn btn-primary mx-1">Add Account</button>
+        <button class="btn btn-primary ml-1">Add Sub-group</button>
+    </div>
+    <!-- TABLES -->
+    <div>
+        <table class="table" v-for="i in numbers">
+            <thead>
+                <tr>
+                    <th>hello</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Hello</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    var app = new Vue({
+        delimiters: ['[[', ']]'],
+        el: "#app",
+
+        data: {
+            numbers: [1,2,3,4,5,6,7,8,9,10],
+        }
+    })
+    
+</script>
 
 {% endblock %}
