@@ -10,27 +10,171 @@
 
 <!-- MAIN BODY -->
 
-<div class="container" id="app">
+<div class="container" id="app" v-cloak>
+    <pre>[[ $data ]]</pre>
     <!-- TITLE AND BUTTONS -->
     <div class="d-flex align-items-center mb-3">
         <span class="font-size-18 font-bold mr-1">Chart of Accounts</span>
-        <button class="btn btn-primary mx-1">Add Account</button>
-        <button class="btn btn-primary ml-1">Add Sub-group</button>
+        <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target="#addAccountModal">Add Account</button>
+        <button type="button" class="btn btn-primary ml-1" data-toggle="modal" data-target="#addSubGroupModal">Add Sub-group</button>
     </div>
     <!-- TABLES -->
     <div>
-        <table class="table" v-for="i in numbers">
+        <table is="custom-table-main" v-pre>
+            <thead class="thead-dark">
+                <th colspan="99" class="font-size-18">GROUP ACCOUNT</th>
+            </thead>
             <thead>
-                <tr>
-                    <th>hello</th>
-                </tr>
+                <th>Code</th>
+                <th>Account Name</th>
+                <th>Linked Account</th>
+                <th>Sub Group</th>
+                <th>Balance</th>
             </thead>
             <tbody>
                 <tr>
-                    <td>Hello</td>
+                    <td>sample 0101</td>
+                    <td>sample Cash</td>
+                    <td></td>
+                    <td>sample Cash Equivalent</td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- ADD ACCOUNT MODAL -->
+    <div class="modal fade" id="addAccountModal">
+        <div class="modal-dialog">
+            <div class="modal-content b-radius-15 px-3 py-2">
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <span class="modal-title">Add Account</span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="sub-group">Choose Sub-group</label>
+                                <select v-model="accountModal.subGroup" class="form-control py-0" name="sub-group" id="sub-group-select">
+                                    <option value="" selected disabled>none</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-5 pr-2">
+                            <div class="form-group">
+                                <label for="code">Code</label>
+                                <input v-model="accountModal.code" type="text" class="form-control" name="code" placeholder="Enter Code">
+                            </div>
+                        </div>
+                        <div class="col col-7 pl-2">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input v-model="accountModal.name" type="text" class="form-control" name="name" placeholder="Enter Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-12">
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <input v-model="accountModal.description" type="text" name="description" class="form-control" placeholder="Enter Description">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col"> 
+                            <div class="form-check mb-2">
+                                <input v-model="accountModal.contra" type="checkbox" class="form-check-input" name="contra">
+                                <label class="form-check-label font-semibold" for="contra">Contra Account</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row py-3 b-radius-10 order-card">
+                        <div class="col col-12">
+                            <div class="form-check">
+                                <input v-model="accountModal.linkToAccount" type="checkbox" class="form-check-input" name="linkToAccount">
+                                <label for="linkToAccount" class="form-check-label font-semibold">Link to an Account</label>
+                            </div>
+                        </div>
+                        <div class="col col-12" id="linkToAccountContainer" style="display: none;">
+                            <div class="form-group mt-2">
+                                <label for="specificAccount">Specific Account</label>
+                                <select v-model="accountModal.specificAccount" name="specificAccount" class="form-control py-0" >
+                                    <option value="" disabled selected>None</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-12">
+                            <div class="d-flex flex-row-reverse">
+                                <button class="btn btn-primary mt-2">Add Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD SUB GROUP MODAL -->
+    <div class="modal fade" id="addSubGroupModal">
+        <div class="modal-dialog">
+            <div class="modal-content b-radius-15 px-3 py-2">
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <span class="modal-title">Add Sub-Group</span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="group">Choose Group Account</label>
+                                <select v-model="subGroupModal.group" name="group" class="form-control py-0">
+                                    <option value="" selected disabled>None</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-5 pr-2">
+                            <div class="form-group">
+                                <label for="code">Code</label>
+                                <input v-model="subGroupModal.code" type="text" name="code" class="form-control" placeholder="Enter Code">
+                            </div>
+                        </div>
+                        <div class="col-7 pl-2">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input v-model="subGroupModal.name" type="text" name="name" class="form-control" placeholder="Enter Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <input v-model="subGroupModal.description" type="text" name="description" class="form-control" placeholder="Enter Description">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-12">
+                            <div class="d-flex flex-row-reverse">
+                                <button class="btn btn-primary mt-2">Add Sub-group Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -44,10 +188,44 @@
         el: "#app",
 
         data: {
-            numbers: [1,2,3,4,5,6,7,8,9,10],
+            config: {
+                headers: {
+                    "X-CSRFToken": getCookie('csrftoken')
+                }
+            },
+            accountModal: {
+                subGroup: '',
+                code: null,
+                name: null,
+                description: null,
+                contra: null,
+                linkToAccount: null,
+                specificAccount: '',
+            },
+            subGroupModal: {
+                group: '',
+                code: null,
+                name: null,
+                description: null,
+            }
+        }, 
+        computed:{
+            linkToAccount(){
+                return this.accountModal.linkToAccount
+            }
+        },
+
+        watch:{
+            linkToAccount(){
+                var x = document.getElementById('linkToAccountContainer')
+                if (this.accountModal.linkToAccount == false){
+                    x.style.display = 'none'
+                } else {
+                    x.style.display = 'block'
+                }
+            }
         }
     })
-    
 </script>
 
 {% endblock %}

@@ -542,13 +542,18 @@ label{
     margin: 10px;
 }
 
+.modal-title{
+    font-size: 18px;
+    font-weight: 700;
+}
+
 .icon-gray{
     color: #666666;
 }
 
-#table{
+/* #table{
     display: none;
-}
+} */
 
 #loader {
     border: 8px solid #f3f3f3; /* Light grey */
