@@ -66,7 +66,7 @@ class NavbarGAS extends HTMLElement{
         
             <!-- Tabs Container -->
             <div class="gas-nav justify-content-center font-semibold navbar">
-                <a href="#" class="mx-3" id="nav-journal">Journal</a>
+                <a href="/journal/" class="mx-3" id="nav-journal">Journal</a>
                 <div class="btn-group mx-3">
                     <a id="nav-sales" href="#" class="" data-toggle="dropdown">Sales</a>
                     <div class="dropdown-menu b-radius-5 py-0">
@@ -94,7 +94,7 @@ class NavbarGAS extends HTMLElement{
                 <a href="#" class="mx-3" id="nav-customers">Customers</a>
                 <a href="#" class="mx-3" id="nav-vendors">Vendors</a>
                 <a href="#" class="mx-3" id="nav-bank-recon">Bank Reconciliation</a>
-                <a href="#" class="mx-3" id="nav-accounts">Chart of Accounts</a>
+                <a href="/" class="mx-3" id="nav-accounts">Chart of Accounts</a>
                 <a href="#" class="mx-3" id="nav-ppe">PPE</a>
                 <a href="#" class="mx-3" id="nav-approvals">Approvals</a>
             </div>

@@ -8,13 +8,14 @@ router.register(r"root", views.RootAPI, 'root')
 router.register(r"sub-group", views.SubGroupAPI, 'sub-group')
 router.register(r"child", views.ChildAPI, 'child')
 router.register(r"journal", views.JournalAPI, 'journal')
-router.register(r"normally-journal", views.Normally_JournalAPI, 'normally-journal')
+router.register(r"journal-entries", views.JournalEntriesAPI, 'normally-journal')
 
 router.register(r"nested-root", views.RootNestedAPI, 'nested-root')
 router.register(r"nested-sub", views.SubNestedAPI, 'nested-sub')
 router.register(r"nested-child", views.ChildNestedAPI, 'nested-child')
 router.register(r"nested-journal", views.JournalNestedAPI, 'nested-journal')
-router.register(r"nested-normally-journal", views.Normally_JournalAPI, 'nested-normally-journal')
+router.register(r"nested-journal-entries", views.JournalEntriesNestedAPI, 'nested-journal-entries')
+router.register(r"nested-journal-entries-child", views.JournalEntriesNestedChildAccountAPI, 'nested-journal-entries-child')
 
 
 
@@ -22,5 +23,6 @@ router.register(r"nested-normally-journal", views.Normally_JournalAPI, 'nested-n
 
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('', views.test, name='test')
+    path('', views.chartOfAccounts, name='chartOfAccounts'),
+    path('journal/', views.journalView, name='journalView')
 ]

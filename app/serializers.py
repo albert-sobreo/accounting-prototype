@@ -70,46 +70,43 @@ class JournalSZ(serializers.ModelSerializer):
         fields = "__all__"
 
 class JournalNestedSZ(serializers.ModelSerializer):
-    normallyJournal = serializers.SerializerMethodField()
+    journalEntries = serializers.SerializerMethodField()
     class Meta:
         model = Journal
         fields = [
             'code',
             'date',
-            'remark',
-            'normallyJournal',
+            'remarks',
+            'journalEntries',
         ]
-    def get_normallyJournal(self, thisObj):
-        normallyJournal = thisObj.normally_journal_set.all()
+    def get_journalEntries(self, thisObj):
+        journalEntries = thisObj.journal_entries_set.all()
 
-        return Normally_JournalNestedChildAccountSZ(instance=normallyJournal, many=True).data
+        return JournalEntriesNestedChildAccountSZ(instance=journalEntries, many=True).data
 
-class Normally_JournalSZ(serializers.ModelSerializer):
+class JournalEntriesSZ(serializers.ModelSerializer):
     class Meta:
-        model = Normally_Journal
+        model = Journal_Entries
         fields = "__all__"
 
-class Normally_JournalNestedSZ(serializers.ModelSerializer):
-    code = JournalSZ(read_only=True)
-    Childaccount = serializers.SerializerMethodField()
+class JouralEntriesNestedSZ(serializers.ModelSerializer):
+    journal = JournalSZ(read_only=True)
+    child_account = serializers.SerializerMethodField()
     class Meta:
-        model = Normally_Journal
+        model = Journal_Entries
         fields = [
-            'Journal',
+            'journal',
+            'normally',
             'amount',
-            'Childaccount',
+            'child_account',
         ]
-    def get_childAccount(self, thisObj):
-        Childaccount = Child_Account.objects.filter(account_classification__root_account=thisObj)
-        return ChildNestedSZ(instance=Childaccount, many=True).data
 
-class Normally_JournalNestedChildAccountSZ(serializers.ModelSerializer):
-    Childaccount = serializers.SerializerMethodField()
-    class Meta:
-        model = Normally_Journal
-        fields = [
-            'Childaccount',
-        ]
     def get_childAccount(self, thisObj):
-        Childaccount = Child_Account.objects.filter(account_classification__root_account=thisObj)
-        return ChildNestedSZ(instance=Childaccount, many=True).data        
+        child_account = Child_Account.objects.filter(account_classification__root_account=thisObj)
+        return ChildNestedSZ(instance=child_account, many=True).data
+
+class JournalEntriesNestedChildAccountSZ(serializers.ModelSerializer):
+    child_account = ChildSZ(read_only=True)
+    class Meta:
+        model = Journal_Entries
+        fields = '__all__'

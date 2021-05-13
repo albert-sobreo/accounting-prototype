@@ -6,9 +6,13 @@ from rest_framework import viewsets
 from .serializers import *
 
 # Create your views here.
-def test(request):
+def chartOfAccounts(request):
     return render(request, 'chart_of_accounts.html', {})
 
+def journalView(request):
+    return render(request, 'journal.html', {})
+
+# CHART OF ACCOUNTS
 class RootAPI(viewsets.ModelViewSet):
     serializer_class = RootSZ
     queryset = Account_Group.objects.all().order_by('code')
@@ -33,18 +37,23 @@ class ChildNestedAPI(viewsets.ModelViewSet):
     serializer_class = ChildNestedSZ
     queryset = Child_Account.objects.all().order_by('pk')
 
+# JOURNAL
 class JournalAPI(viewsets.ModelViewSet):
     serializer_class = JournalSZ
-    queryset = Journal.objects.all().order_by('pk')
+    queryset = Journal.objects.all().order_by('date')
 
 class JournalNestedAPI(viewsets.ModelViewSet):
     serializer_class = JournalNestedSZ
-    queryset = Journal.objects.all().order_by('pk')
+    queryset = Journal.objects.all().order_by('date')
 
-class Normally_JournalAPI(viewsets.ModelViewSet):
-    serializer_class = Normally_JournalSZ
-    queryset = Normally_Journal.objects.all().order_by('pk')
+class JournalEntriesAPI(viewsets.ModelViewSet):
+    serializer_class = JournalEntriesSZ
+    queryset = Journal_Entries.objects.all().order_by('pk')
 
-class Normally_JournaNestedlAPI(viewsets.ModelViewSet):
-    serializer_class = Normally_JournalNestedSZ
-    queryset = Normally_Journal.objects.all().order_by('pk')
+class JournalEntriesNestedAPI(viewsets.ModelViewSet):
+    serializer_class = JournalNestedSZ
+    queryset = Journal_Entries.objects.all().order_by('pk')
+
+class JournalEntriesNestedChildAccountAPI(viewsets.ModelViewSet):
+    serializer_class = JournalEntriesNestedChildAccountSZ
+    queryset = Journal_Entries.objects.all().order_by('pk')
