@@ -58,10 +58,10 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="sub-group">Choose Account Sub-group</label>
-                                <select v-model="accountModal.subGroup" class="form-control py-0" name="sub-group" id="sub-group-select">
+                                <select v-model="accountModal.account_classification" class="form-control py-0" name="sub-group" id="sub-group-select">
                                     <option value="" selected disabled class="gray">Choose Account Sub-group</option>
                                     <optgroup v-for="item in accounts" :label="item.name">
-                                        <option v-for="subGroup in item.subGroup" :value="child.id">[[subGroup.name]]</option>
+                                        <option v-for="subGroup in item.subGroup" :value="subGroup.id">[[subGroup.name]]</option>
                                     </optgroup>
                                 </select>
                             </div>
@@ -107,7 +107,7 @@
                         <div class="col col-12" id="linkToAccountContainer" style="display: none;">
                             <div class="form-group mt-2">
                                 <label for="specificAccount">Specific Account</label>
-                                <select v-model="accountModal.specificAccount" name="specificAccount" class="form-control py-0" >
+                                <select v-model="accountModal.me" name="specificAccount" class="form-control py-0" >
                                     <option value="" selected disabled class="gray">Choose Account</option>
                                     <optgroup v-for="item in subGroup" :label="item.name">
                                         <option v-for="child in item.childAccount" :value="child.id">[[child.name]]</option>
@@ -119,7 +119,7 @@
                     <div class="row">
                         <div class="col col-12">
                             <div class="d-flex flex-row-reverse">
-                                <button class="btn btn-primary mt-2">Add Account</button>
+                                <button class="btn btn-primary mt-2" @click="submitAccount()">Add Account</button>
                             </div>
                         </div>
                     </div>
@@ -143,9 +143,9 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="group">Choose Group Account</label>
-                                <select v-model="subGroupModal.group" name="group" class="form-control py-0">
-                                    <option class="gray" value="" selected disabled>Select Account Group</option>
-                                    <option v-for="item in accounts" :value="item.pk">[[item.name]]</option>
+                                <select v-model="subGroupModal.root_account" name="group" class="form-control py-0">
+                                    <option class="gray" value='' selected disabled>Select Account Group</option>
+                                    <option v-for="item in accounts" :value="item.id">[[item.name]]</option>
                                 </select>
                             </div>
                         </div>
@@ -175,7 +175,7 @@
                     <div class="row">
                         <div class="col col-12">
                             <div class="d-flex flex-row-reverse">
-                                <button class="btn btn-primary mt-2">Add Sub-group Account</button>
+                                <button class="btn btn-primary mt-2" @click="submitSubGroup()">Add Sub-group Account</button>
                             </div>
                         </div>
                     </div>
@@ -203,16 +203,16 @@
                 }
             },
             accountModal: {
-                subGroup: '',
+                account_classification: '',
                 code: null,
                 name: null,
                 description: null,
-                contra: null,
+                contra: false,
                 linkToAccount: null,
-                specificAccount: '',
+                me: null,
             },
             subGroupModal: {
-                group: '',
+                root_account: '',
                 code: null,
                 name: null,
                 description: null,
@@ -230,18 +230,18 @@
         methods: {
             accountModalInitial(){
                 return {
-                    subGroup: '',
+                    account_classification: '',
                     code: null,
                     name: null,
                     description: null,
-                    contra: null,
+                    contra: false,
                     linkToAccount: null,
-                    specificAccount: '',
+                    me: null,
                 }
             },
             subGroupModalInitial(){
                 return{
-                    group: '',
+                    root_account: '',
                     code: null,
                     name: null,
                     description: null,
@@ -252,7 +252,17 @@
                 axios.get('/api/nested-sub/').then(res=>this.subGroup=res.data);
                 axios.get('/api/root/').then(res=>this.group=res.data);
                 axios.get('/api/child/').then(res=>this.child=res.data);
-            }
+            },
+
+            submitAccount(){
+                axios.post('/api/child/', this.accountModal, this.config).then(res=>this.loadData());
+                this.accountModal = this.accountModalInitial()
+            },
+
+            submitSubGroup(){
+                axios.post('/api/sub-group/', this.subGroupModal, this.config).then(res=>this.loadData());
+                this.subGroupModal = this.subGroupModalInitial()
+            },
         },
 
         watch:{
