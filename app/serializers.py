@@ -70,19 +70,19 @@ class JournalSZ(serializers.ModelSerializer):
         fields = "__all__"
 
 class JournalNestedSZ(serializers.ModelSerializer):
-    Childaccount = serializers.SerializerMethodField()
+    normallyJournal = serializers.SerializerMethodField()
     class Meta:
         model = Journal
         fields = [
             'code',
             'date',
             'remark',
-            'Childaccount',
+            'normallyJournal',
         ]
-    def get_childAccount(self, thisObj):
-        Childaccount = Child_Account.objects.filter(account_classification__root_account=thisObj)
+    def get_normallyJournal(self, thisObj):
+        normallyJournal = thisObj.normally_journal_set.all()
 
-        return ChildNestedSZ(instance=Childaccount, many=True).data
+        return Normally_JournalNestedChildAccountSZ(instance=normallyJournal, many=True).data
 
 class Normally_JournalSZ(serializers.ModelSerializer):
     class Meta:
@@ -93,13 +93,23 @@ class Normally_JournalNestedSZ(serializers.ModelSerializer):
     code = JournalSZ(read_only=True)
     Childaccount = serializers.SerializerMethodField()
     class Meta:
-        model = Child_Account
+        model = Normally_Journal
         fields = [
-            'code',
+            'Journal',
             'amount',
             'Childaccount',
         ]
     def get_childAccount(self, thisObj):
         Childaccount = Child_Account.objects.filter(account_classification__root_account=thisObj)
+        return ChildNestedSZ(instance=Childaccount, many=True).data
 
-        return ChildNestedSZ(instance=Childaccount, many=True).data    
+class Normally_JournalNestedChildAccountSZ(serializers.ModelSerializer):
+    Childaccount = serializers.SerializerMethodField()
+    class Meta:
+        model = Normally_Journal
+        fields = [
+            'Childaccount',
+        ]
+    def get_childAccount(self, thisObj):
+        Childaccount = Child_Account.objects.filter(account_classification__root_account=thisObj)
+        return ChildNestedSZ(instance=Childaccount, many=True).data        
