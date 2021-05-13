@@ -32,7 +32,7 @@
             </thead>
             <tbody>
                 <tr v-for="item in account.childAccount">
-                    <td>[[account.code]][[item.account_classification.code]][[item.code]]</td>
+                    <td>[[account.code]]-[[item.account_classification.code]]-[[item.code]]</td>
                     <td>[[item.name]]</td>
                     <td v-if="item.me!=null">[[item.me.name]]</td>
                     <td v-else></td>
@@ -68,10 +68,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col col-5 pr-2">
-                            <div class="form-group">
-                                <label for="code">Code</label>
-                                <input v-model="accountModal.code" type="text" class="form-control" name="code" placeholder="Enter Code">
+                        <div class="col col-5 pr-2 form-group">
+                            <label for="">Code</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">[[accountModal.rootCode]]</span>
+                                </div>
+                                <input v-model="accountModal.code" type="text" class="form-control box-shadow-off" name="code" placeholder="Enter Code" style="margin-top: 0px;">
                             </div>
                         </div>
                         <div class="col col-7 pl-2">
@@ -151,10 +154,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col col-5 pr-2">
-                            <div class="form-group">
-                                <label for="code">Code</label>
-                                <input v-model="subGroupModal.code" type="text" name="code" class="form-control" placeholder="Enter Code">
+                        <div class="col col-5 pr-2 form-group">
+                            <label for="">Code</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">[[subGroupModal.rootCode]]</span>
+                                </div>
+                                <input v-model="subGroupModal.code" type="text" class="form-control box-shadow-off" name="code" placeholder="Enter Code" style="margin-top: 0px;">
                             </div>
                         </div>
                         <div class="col-7 pl-2">
@@ -207,14 +213,16 @@
                 name: null,
                 description: null,
                 contra: false,
-                linkToAccount: null,
+                linkToAccount: false,
                 me: null,
+                rootCode: ''
             },
             subGroupModal: {
                 root_account: '',
                 code: null,
                 name: null,
                 description: null,
+                rootCode: ''
             },
             accounts: [],
             subGroup: [],
@@ -224,6 +232,32 @@
         computed:{
             linkToAccount(){
                 return this.accountModal.linkToAccount
+            },
+            rootCodeAccount(){
+                return this.accountModal.account_classification
+            },
+            rootCodeSub(){
+                return this.subGroupModal.root_account
+            }
+        },
+        watch:{
+            linkToAccount(){
+                var x = document.getElementById('linkToAccountContainer')
+                if (this.accountModal.linkToAccount == false){
+                    x.style.display = 'none'
+                    this.accountModal.me = null
+                } else {
+                    x.style.display = 'block'
+                }
+            },
+            rootCodeAccount(id){
+                object = this.subGroup.find(x=>x.id === id)
+                console.log(object)
+                this.accountModal.rootCode = `${object.root_account.code}-${object.code}-`
+            },
+            rootCodeSub(id){
+                object = this.group.find(x=>x.id===id)
+                this.subGroupModal.rootCode = `${object.code}-`
             }
         },
         methods: {
@@ -234,8 +268,9 @@
                     name: null,
                     description: null,
                     contra: false,
-                    linkToAccount: null,
+                    linkToAccount: false,
                     me: null,
+                    rootCode: ''
                 }
             },
             subGroupModalInitial(){
@@ -307,17 +342,6 @@
                     })
                 })
             },
-        },
-
-        watch:{
-            linkToAccount(){
-                var x = document.getElementById('linkToAccountContainer')
-                if (this.accountModal.linkToAccount == false){
-                    x.style.display = 'none'
-                } else {
-                    x.style.display = 'block'
-                }
-            }
         },
         mounted(){
             this.loadData()
