@@ -190,7 +190,6 @@
 {% endblock %}
 
 {% block scripts %}
-
 <script>
     var app = new Vue({
         delimiters: ['[[', ']]'],
@@ -255,8 +254,32 @@
             },
 
             submitAccount(){
-                axios.post('/api/child/', this.accountModal, this.config).then(res=>this.loadData());
-                this.accountModal = this.accountModalInitial()
+                axios.post(
+                    '/api/child/',
+                    this.accountModal,
+                    this.config
+                )
+                .then(res=>{
+                    this.loadData()
+                    var name = this.accountModal.name
+                    console.log(this.accountModal.name)
+                    Swal.fire({
+                        title: "Account Successfully added",
+                        html: "<b>" + name + "</b>" + " is added as account.",
+                        icon: "success",
+                    });
+                    
+                })
+                .then(
+                    res=>this.accountModal = this.accountModalInitial()
+                )
+                .catch(err => {
+                    Swal.fire({
+                        title: "Something went wrong",
+                        html: err,
+                        icon: 'error'
+                    })
+                })
             },
 
             submitSubGroup(){
