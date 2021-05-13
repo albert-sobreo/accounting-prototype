@@ -149,19 +149,19 @@ body{
 }
 
 .b-radius-5{
-    border-radius: 5px;
+    border-radius: 5px !important;
 }
 
 .b-radius-10{
-    border-radius: 10px;
+    border-radius: 10px !important;
 }
 
 .b-radius-15{
-    border-radius: 15px;
+    border-radius: 15px !important;
 }
 
 .b-radius-circle{
-    border-radius: 999px;
+    border-radius: 999px !important;
 }
 
 .b-tl-radius-10{
@@ -745,4 +745,8 @@ option{
 
 .nav-hyperlinks-gas a:hover{
     color: var(--gas-orange-text);
+}
+
+.swal-modal{
+    border-radius: 15px !important;
 }
