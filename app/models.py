@@ -70,3 +70,13 @@ class Inventory_Item(models.Model):
     
     def __str__(self):
         return self.name
+
+class Journal(models.Model):
+    code = models.CharField(max_length=100)
+    date = models.DateField(null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
+
+class Normally_Journal(models.Model):
+    normally = models.CharField(max_length=100)
+    child_account = models.ForeignKey(Child_Account, on_delete=models.PROTECT, null=True, blank=True)
+    amount = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True)

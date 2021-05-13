@@ -63,4 +63,43 @@ class ChildNestedSZ(serializers.ModelSerializer):
     class Meta:
         model = Child_Account
         fields = "__all__"
-    
+
+class JournalSZ(serializers.ModelSerializer):
+    class Meta:
+        model = Journal
+        fields = "__all__"
+
+class JournalNestedSZ(serializers.ModelSerializer):
+    Childaccount = serializers.SerializerMethodField()
+    class Meta:
+        model = Journal
+        fields = [
+            'code',
+            'date',
+            'remark',
+            'Childaccount',
+        ]
+    def get_childAccount(self, thisObj):
+        Childaccount = Child_Account.objects.filter(account_classification__root_account=thisObj)
+
+        return ChildNestedSZ(instance=Childaccount, many=True).data
+
+class Normally_JournalSZ(serializers.ModelSerializer):
+    class Meta:
+        model = Normally_Journal
+        fields = "__all__"
+
+class Normally_JournalNestedSZ(serializers.ModelSerializer):
+    code = JournalSZ(read_only=True)
+    Childaccount = serializers.SerializerMethodField()
+    class Meta:
+        model = Child_Account
+        fields = [
+            'code',
+            'amount',
+            'Childaccount',
+        ]
+    def get_childAccount(self, thisObj):
+        Childaccount = Child_Account.objects.filter(account_classification__root_account=thisObj)
+
+        return ChildNestedSZ(instance=Childaccount, many=True).data    
