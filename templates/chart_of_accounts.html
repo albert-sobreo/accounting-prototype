@@ -32,7 +32,7 @@
             </thead>
             <tbody>
                 <tr v-for="item in account.childAccount">
-                    <td>[[account.code]][[item.account_classification.code]][[item.code]]</td>
+                    <td>[[account.code]]-[[item.account_classification.code]]-[[item.code]]</td>
                     <td>[[item.name]]</td>
                     <td v-if="item.me!=null">[[item.me.name]]</td>
                     <td v-else></td>
@@ -68,10 +68,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col col-5 pr-2">
-                            <div class="form-group">
-                                <label for="code">Code</label>
-                                <input v-model="accountModal.code" type="text" class="form-control" name="code" placeholder="Enter Code">
+                        <div class="col col-5 pr-2 form-group">
+                            <label for="">Code</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">@</span>
+                                </div>
+                                <input v-model="accountModal.code" type="text" class="form-control box-shadow-off" name="code" placeholder="Enter Code">
                             </div>
                         </div>
                         <div class="col col-7 pl-2">
