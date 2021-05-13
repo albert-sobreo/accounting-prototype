@@ -262,7 +262,6 @@
                 .then(res=>{
                     this.loadData()
                     var name = this.accountModal.name
-                    console.log(this.accountModal.name)
                     Swal.fire({
                         title: "Account Successfully added",
                         html: "<b>" + name + "</b>" + " is added as account.",
@@ -283,8 +282,30 @@
             },
 
             submitSubGroup(){
-                axios.post('/api/sub-group/', this.subGroupModal, this.config).then(res=>this.loadData());
-                this.subGroupModal = this.subGroupModalInitial()
+                axios.post(
+                    '/api/sub-group/',
+                    this.subGroupModal,
+                    this.config
+                )
+                .then(res=>{
+                    this.loadData()
+                    var name = this.subGroupModal.name
+                    Swal.fire({
+                        title: "Sub-group Successfully Added",
+                        html: "<b>" + name + "</b>" + " is added as sub-group",
+                        icon: 'success'
+                    })
+                })
+                .then(
+                    res=>this.subGroupModal = this.subGroupModalInitial()
+                )
+                .catch(err => {
+                    Swal.fire({
+                        title: "Something went wrong",
+                        html: err,
+                        icon: 'error'
+                    })
+                })
             },
         },
 
