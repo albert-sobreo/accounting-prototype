@@ -1,5 +1,10 @@
 from rest_framework import serializers
 from .models import *
+from rest_framework_bulk import (
+    BulkListSerializer,
+    BulkSerializerMixin,
+    ListBulkCreateUpdateDestroyAPIView,
+)
 
 class RootSZ(serializers.ModelSerializer):
     class Meta:
@@ -88,6 +93,11 @@ class JournalEntriesSZ(serializers.ModelSerializer):
     class Meta:
         model = Journal_Entries
         fields = "__all__"
+
+class BulkJournalEntriesSZ(BulkSerializerMixin, serializers.ModelSerializer):
+    class Meta:
+        model = Journal_Entries
+        list_serializer_class = BulkListSerializer
 
 class JouralEntriesNestedSZ(serializers.ModelSerializer):
     journal = JournalSZ(read_only=True)
