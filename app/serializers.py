@@ -103,12 +103,36 @@ class JournalEntriesNestedChildAccountSZ(serializers.ModelSerializer):
         model = Journal_Entries
         fields = '__all__'
 
+
+
+########## LEDGER SPECIAL SERIALIZERS ##########
+class SubGroupForLedgerSZ(serializers.ModelSerializer):
+    root_account = RootSZ(read_only=True)
+    class Meta:
+        model = Account_Sub_Group
+        fields = '__all__'
+
+class ChildForLedger(serializers.ModelSerializer):
+    account_classification = SubGroupForLedgerSZ(read_only=True)
+    me = ChildSZ(read_only=True)
+    class Meta:
+        model = Child_Account
+        fields = "__all__"
+
+class JournalEntriesForLedger(serializers.ModelSerializer):
+    journal = JournalSZ(read_only=True)
+    child_account = ChildForLedger(read_only=True)
+    class Meta:
+        model = Journal_Entries
+        fields = '__all__'
+
 class LedgerSZ(serializers.ModelSerializer):
     journalEntries = serializers.SerializerMethodField()
-    account_classification = Sub_GroupNestedSZ(read_only=True)
+    account_classification = SubGroupForLedgerSZ(read_only=True)
     class Meta:
         model = Child_Account
         fields = [
+            'id',
             'code',
             'name',
             'amount',
@@ -118,4 +142,4 @@ class LedgerSZ(serializers.ModelSerializer):
     def get_journalEntries(self, thisObj):
         journalEntries = thisObj.journal_entries_set.all()
 
-        return JournalEntriesNestedSZ(instance=journalEntries, many=True).data
+        return JournalEntriesForLedger(instance=journalEntries, many=True).data
