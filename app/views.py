@@ -64,7 +64,7 @@ class JournalEntriesNestedChildAccountAPI(viewsets.ModelViewSet):
     serializer_class = JournalEntriesNestedChildAccountSZ
     queryset = Journal_Entries.objects.all().order_by('pk')
 
-# JOURNAL API VIEW
+# SAVE JOURNAL API VIEW
 class SaveJournalAPI(APIView):
     def post(self, request, format=None):
         journal = request.data
