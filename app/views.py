@@ -11,14 +11,21 @@ from rest_framework.response import Response
 
 from .models import *
 
-# Create your views here.
+########## FUNCTION-BASED VIEWS ##########
 def chartOfAccounts(request):
     return render(request, 'chart_of_accounts.html', {})
 
 def journalView(request):
     return render(request, 'journal.html', {})
 
-# CHART OF ACCOUNTS
+def ledgerView(request):
+    return render(request, "ledger.html", {})
+
+
+
+
+
+########## CHART OF ACCOUNTS ##########
 class RootAPI(viewsets.ModelViewSet):
     serializer_class = RootSZ
     queryset = Account_Group.objects.all().order_by('code')
@@ -43,7 +50,11 @@ class ChildNestedAPI(viewsets.ModelViewSet):
     serializer_class = ChildNestedSZ
     queryset = Child_Account.objects.all().order_by('pk')
 
-# JOURNAL
+
+
+
+
+########## JOURNAL ##########
 class JournalAPI(viewsets.ModelViewSet):
     serializer_class = JournalSZ
     queryset = Journal.objects.all().order_by('code').reverse()
@@ -64,7 +75,11 @@ class JournalEntriesNestedChildAccountAPI(viewsets.ModelViewSet):
     serializer_class = JournalEntriesNestedChildAccountSZ
     queryset = Journal_Entries.objects.all().order_by('pk')
 
-# SAVE JOURNAL API VIEW
+
+
+
+
+########## SAVE JOURNAL ##########
 class SaveJournalAPI(APIView):
     def post(self, request, format=None):
         journal = request.data
@@ -114,3 +129,7 @@ class SaveJournalAPI(APIView):
 
         return Response()
 
+########## LEDGER ##########
+class LedgerAPI(viewsets.ModelViewSet):
+    serializer_class = LedgerSZ
+    queryset = Child_Account.objects.all().order_by('pk')

@@ -90,7 +90,7 @@ class NavbarGAS extends HTMLElement{
                         <a href="#" class="dropdown-item d-item-gas font-size-12 font-semibold">Vouchers</a>
                     </div>
                 </div>
-                <a href="#" class="mx-3" id="nav-reports">Reports</a>
+                <a href="/ledger/" class="mx-3" id="nav-reports">Reports</a>
                 <a href="#" class="mx-3" id="nav-customers">Customers</a>
                 <a href="#" class="mx-3" id="nav-vendors">Vendors</a>
                 <a href="#" class="mx-3" id="nav-bank-recon">Bank Reconciliation</a>

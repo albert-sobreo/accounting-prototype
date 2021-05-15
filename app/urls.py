@@ -17,10 +17,12 @@ router.register(r"nested-child", views.ChildNestedAPI, 'nested-child')
 router.register(r"nested-journal", views.JournalNestedAPI, 'nested-journal')
 router.register(r"nested-journal-entries", views.JournalEntriesNestedAPI, 'nested-journal-entries')
 router.register(r"nested-journal-entries-child", views.JournalEntriesNestedChildAccountAPI, 'nested-journal-entries-child')
+router.register(r"ledger", views.LedgerAPI, 'ledger-api')
 
 urlpatterns = [
     path('api/', include(router.urls)),
     path('', views.chartOfAccounts, name='chartOfAccounts'),
     path('journal/', views.journalView, name='journalView'),
-    path('save-journal/', views.SaveJournalAPI.as_view())
+    path('save-journal/', views.SaveJournalAPI.as_view()), 
+    path('ledger/', views.ledgerView, name="ledger")
 ]
