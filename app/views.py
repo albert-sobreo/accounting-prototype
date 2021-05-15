@@ -88,8 +88,12 @@ class SaveJournalAPI(APIView):
             je.amount = Decimal(item['amount'])
             je.save()
 
-            if je.normally == je.child_account_classification.root_account.normally:
-                je.child_account.amount += je.amount    
+            if je.normally == je.child_account.account_classification.root_account.normally:
+                je.child_account.amount += je.amount
+                je.child_account.save()
+            else:
+                je.child_account.amount -= je.amount
+                je.child_account.save()   
 
 
         for item in credit:
@@ -101,8 +105,12 @@ class SaveJournalAPI(APIView):
             je.amount = Decimal(item['amount'])
             je.save()
 
-            if je.normally == je.child_account_classification.root_account.normally:
-                je.child_account.amount += je.amount    
+            if je.normally == je.child_account.account_classification.root_account.normally:
+                je.child_account.amount += je.amount
+                je.child_account.save()
+            else:
+                je.child_account.amount -= je.amount
+                je.child_account.save() 
 
         return Response()
 

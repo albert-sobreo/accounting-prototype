@@ -6,7 +6,7 @@ class Account_Group(models.Model):
     name = models.CharField(max_length=100)
     normally = models.CharField(max_length=100)
     permanence = models.CharField(max_length=100)
-    amount = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True)
+    amount = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True, default= 0.0)
 
     class Meta:
         verbose_name = "Account Group"
@@ -34,7 +34,7 @@ class Child_Account(models.Model):
     account_classification = models.ForeignKey(Account_Sub_Group, on_delete=models.PROTECT, null=True, blank=True)
     me = models.ForeignKey('self', null=True,blank=True, on_delete=models.PROTECT)
     contra = models.BooleanField()
-    amount = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True)
+    amount = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True,default= 0.0)
     description = models.TextField(null=True, blank=True)
 
     class Meta:
@@ -87,7 +87,7 @@ class Journal_Entries(models.Model):
     journal = models.ForeignKey(Journal, on_delete=models.PROTECT, null=True, blank=True)
     normally = models.CharField(max_length=100)
     child_account = models.ForeignKey(Child_Account, on_delete=models.PROTECT, null=True, blank=True)
-    amount = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True)
+    amount = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True,default= 0)
 
     class Meta:
         verbose_name = "Journal Entry"
