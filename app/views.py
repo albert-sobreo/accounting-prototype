@@ -5,11 +5,7 @@ from django.shortcuts import render
 from django.views import View
 from rest_framework import viewsets
 from .serializers import *
-from rest_framework_bulk import (
-    BulkListSerializer,
-    BulkSerializerMixin,
-    ListBulkCreateUpdateDestroyAPIView,
-)
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -58,10 +54,6 @@ class JournalNestedAPI(viewsets.ModelViewSet):
 
 class JournalEntriesAPI(viewsets.ModelViewSet):
     serializer_class = JournalEntriesSZ
-    queryset = Journal_Entries.objects.all().order_by('pk')
-
-class BulkJournalEntriesAPI(ListBulkCreateUpdateDestroyAPIView):
-    serializer_class = BulkJournalEntriesSZ
     queryset = Journal_Entries.objects.all().order_by('pk')
 
 class JournalEntriesNestedAPI(viewsets.ModelViewSet):

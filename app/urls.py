@@ -2,11 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 from rest_framework import routers
-from rest_framework_bulk.routes import BulkRouter
 from rest_framework.urlpatterns import format_suffix_patterns
-
-bulkRouter = BulkRouter()
-bulkRouter.register(r"bulk-journal-entries", views.BulkJournalEntriesAPI, 'bulk-journal-entries')
 
 router = routers.DefaultRouter()
 router.register(r"root", views.RootAPI, 'root')
