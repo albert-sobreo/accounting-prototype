@@ -101,14 +101,17 @@ class SaveJournalAPI(APIView):
             je.normally = item['normally']
             je.child_account = Child_Account.objects.get(pk=item['child_account'])
             je.amount = Decimal(item['amount'])
-            je.save()
+            je.balance = Decimal(item['balance'])
 
             if je.normally == je.child_account.account_classification.root_account.normally:
                 je.child_account.amount += je.amount
                 je.child_account.save()
+                je.balance = je.child_account.amount
             else:
                 je.child_account.amount -= je.amount
-                je.child_account.save()   
+                je.child_account.save()
+                je.balance = je.child_account.amount
+            je.save()
 
 
         for item in credit:
@@ -118,15 +121,17 @@ class SaveJournalAPI(APIView):
             je.normally = item['normally']
             je.child_account = Child_Account.objects.get(pk=item['child_account'])
             je.amount = Decimal(item['amount'])
-            je.save()
+            je.balance = Decimal(item['balance'])
 
             if je.normally == je.child_account.account_classification.root_account.normally:
                 je.child_account.amount += je.amount
                 je.child_account.save()
+                je.balance = je.child_account.amount
             else:
                 je.child_account.amount -= je.amount
-                je.child_account.save() 
-
+                je.child_account.save()
+                je.balance = je.child_account.amount 
+            je.save()
         return Response()
 
 ########## LEDGER ##########
