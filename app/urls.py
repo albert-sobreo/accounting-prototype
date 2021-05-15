@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 from rest_framework import routers
+from rest_framework.urlpatterns import format_suffix_patterns
 
 router = routers.DefaultRouter()
 router.register(r"root", views.RootAPI, 'root')
@@ -17,12 +18,9 @@ router.register(r"nested-journal", views.JournalNestedAPI, 'nested-journal')
 router.register(r"nested-journal-entries", views.JournalEntriesNestedAPI, 'nested-journal-entries')
 router.register(r"nested-journal-entries-child", views.JournalEntriesNestedChildAccountAPI, 'nested-journal-entries-child')
 
-
-
-
-
 urlpatterns = [
     path('api/', include(router.urls)),
     path('', views.chartOfAccounts, name='chartOfAccounts'),
-    path('journal/', views.journalView, name='journalView')
+    path('journal/', views.journalView, name='journalView'),
+    path('save-journal/', views.SaveJournalAPI.as_view())
 ]

@@ -1,9 +1,15 @@
+from decimal import Decimal
 from django import views
 from django.db.models import query
 from django.shortcuts import render
 from django.views import View
 from rest_framework import viewsets
 from .serializers import *
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from .models import *
 
 # Create your views here.
 def chartOfAccounts(request):
@@ -40,11 +46,11 @@ class ChildNestedAPI(viewsets.ModelViewSet):
 # JOURNAL
 class JournalAPI(viewsets.ModelViewSet):
     serializer_class = JournalSZ
-    queryset = Journal.objects.all().order_by('date')
+    queryset = Journal.objects.all().order_by('code').reverse()
 
 class JournalNestedAPI(viewsets.ModelViewSet):
     serializer_class = JournalNestedSZ
-    queryset = Journal.objects.all().order_by('date')
+    queryset = Journal.objects.all().order_by('code').reverse()
 
 class JournalEntriesAPI(viewsets.ModelViewSet):
     serializer_class = JournalEntriesSZ
@@ -57,3 +63,39 @@ class JournalEntriesNestedAPI(viewsets.ModelViewSet):
 class JournalEntriesNestedChildAccountAPI(viewsets.ModelViewSet):
     serializer_class = JournalEntriesNestedChildAccountSZ
     queryset = Journal_Entries.objects.all().order_by('pk')
+
+# JOURNAL API VIEW
+class SaveJournalAPI(APIView):
+    def post(self, request, format=None):
+        journal = request.data
+        debit = request.data['debit']
+        credit = request.data['credit']
+
+        j = Journal()
+
+        j.code = journal['code']
+        j.date = journal['date']
+        j.remarks = journal['remarks']
+
+        j.save()
+
+        for item in debit:
+            je = Journal_Entries()
+
+            je.journal = j
+            je.normally = item['normally']
+            je.child_account = Child_Account.objects.get(pk=item['child_account'])
+            je.amount = Decimal(item['amount'])
+            je.save()
+
+        for item in credit:
+            je = Journal_Entries()
+
+            je.journal = j
+            je.normally = item['normally']
+            je.child_account = Child_Account.objects.get(pk=item['child_account'])
+            je.amount = Decimal(item['amount'])
+            je.save()
+
+        return Response()
+

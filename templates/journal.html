@@ -10,6 +10,7 @@
     <div class="d-flex align-items-center mb-3">
         <span class="font-size-18 font-bold mr-1">Chart of Accounts</span>
         <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target="#addJournalEntry">Add Journal Entry</button>
+        <button type="button" class="btn btn-secondary mx-1" @click="roundingToggler">Round Numbers</button>
     </div>
 
     <!-- TABLE -->
@@ -31,12 +32,12 @@
             <tr v-for="entries in journal.journalEntries">
                 <td class="pl-5">[[entries.child_account.name]]</td>
                 <template v-if="entries.normally === 'Debit'">
-                    <td>[[entries.amount]]</td>
+                    <td>[[formatPrice(entries.amount)]]</td>
                     <td class="pr-5"></td>
                 </template>
                 <template v-if="entries.normally === 'Credit'" class="pr-5">
                     <td></td>
-                    <td class="pr-5">[[entries.amount]]</td>
+                    <td class="pr-5">[[formatPrice(entries.amount)]]</td>
                 </template>
             </tr>
             <tr>
@@ -142,7 +143,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">₱</span>
                                 </div>
-                                <input v-model="line.amount" type="number" step="0.01" class="form-control box-shadow-off" style="margin-top: 0px;">
+                                <input v-model="line.amount" type="number" step="0.00001" class="form-control box-shadow-off" style="margin-top: 0px;">
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
@@ -170,7 +171,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">₱</span>
                                 </div>
-                                <input v-model="addJournalModal.tDebit" type="number" step="0.01" class="form-control box-shadow-off" style="margin-top: 0px;" readonly>
+                                <input v-model="addJournalModal.tDebit" type="number" step="0.00001" class="form-control box-shadow-off" style="margin-top: 0px;" readonly>
                             </div><hr style="padding: 0; margin:2px 0px"><hr  style="padding: 0; margin:2px 0px">
                         </div>
                         <div class="col col-3 pl-2">
@@ -179,14 +180,14 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">₱</span>
                                 </div>
-                                <input v-model="addJournalModal.tCredit" type="number" step="0.01" class="form-control box-shadow-off" style="margin-top: 0px;" readonly>
+                                <input v-model="addJournalModal.tCredit" type="number" step="0.00001" class="form-control box-shadow-off" style="margin-top: 0px;" readonly>
                             </div><hr style="padding: 0; margin:2px 0px"><hr  style="padding: 0; margin:2px 0px">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col col-12">
                             <div class="d-flex flex-row-reverse">
-                                <button class="btn btn-primary mt-2" id="save" disabled>Add Journal Entry</button>
+                                <button @click="submitJournal()" class="btn btn-primary mt-2" id="save" disabled>Add Journal Entry</button>
                             </div>
                         </div>
                     </div>
@@ -219,20 +220,20 @@
                 debit: [{
                     child_account: '',
                     amount: null,
-                    normally: 'debit',
+                    normally: 'Debit',
                 }],
                 credit: [{
                     child_account: '',
                     amount: null,
-                    normally: 'credit',
+                    normally: 'Credit',
                 }],
                 remarks: null,
                 tDebit: null,
                 tCredit: null,
-
             },
             journals: [],
-            subGroups: []
+            subGroups: [],
+            toggle: false,
         },
         computed:{
             totalCostDebit(){
@@ -250,10 +251,10 @@
         },
         watch:{
             totalCostDebit(){
-                this.addJournalModal.tDebit = (this.totalCostDebit.reduce((a,b)=>Number(a)+Number(b), 0)).toFixed(2)
+                this.addJournalModal.tDebit = (this.totalCostDebit.reduce((a,b)=>Number(a)+Number(b), 0)).toFixed(5)
             },
             totalCostCredit(){
-                this.addJournalModal.tCredit = (this.totalCostCredit.reduce((a,b)=>Number(a)+Number(b), 0)).toFixed(2)
+                this.addJournalModal.tCredit = (this.totalCostCredit.reduce((a,b)=>Number(a)+Number(b), 0)).toFixed(5)
             },
             tDebit(){
                 var x = document.getElementById('save')
@@ -281,14 +282,14 @@
                 this.addJournalModal.debit.push({
                     child_account: '',
                     amount: null,
-                    normally: 'debit',
+                    normally: 'Debit',
                 })
             },
             addLineCredit(){
                 this.addJournalModal.credit.push({
                     child_account: '',
                     amount: null,
-                    normally: 'credit',
+                    normally: 'Credit',
                 })
             },
             removeDebit (index) {
@@ -296,6 +297,43 @@
             },
             removeCredit(index){
                 this.$delete(this.addJournalModal.credit, index)
+            },
+            submitJournal(){
+                axios.post('/save-journal/', this.addJournalModal, this.config)
+                .then(res=>this.loadData())
+                .then(res=>this.addJournalModal = this.addJournalModalInitial())
+                .catch(err=>console.log(err));
+            },
+            addJournalModalInitial(){
+                return {
+                    date: null,
+                    retroactive: null,
+                    code: null,
+                    debit: [{
+                        child_account: '',
+                        amount: null,
+                        normally: 'Debit',
+                    }],
+                    credit: [{
+                        child_account: '',
+                        amount: null,
+                        normally: 'Credit',
+                    }],
+                    remarks: null,
+                    tDebit: null,
+                    tCredit: null,
+                }
+            },
+            formatPrice(value) {
+                if (this.toggle){
+                    return value
+                } else {
+                    let val = (value/1).toFixed(2).replace(',', '.')
+                    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+            },
+            roundingToggler(){
+                this.toggle = !this.toggle
             }
         },
         mounted(){
