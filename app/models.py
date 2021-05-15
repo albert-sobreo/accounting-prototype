@@ -88,6 +88,7 @@ class Journal_Entries(models.Model):
     normally = models.CharField(max_length=100)
     child_account = models.ForeignKey(Child_Account, on_delete=models.PROTECT, null=True, blank=True)
     amount = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True,default= 0)
+    balance = models.DecimalField(max_digits=24, decimal_places=5, null=True, blank=True,default= 0)
 
     class Meta:
         verbose_name = "Journal Entry"

@@ -41,12 +41,11 @@
                     <td></td>
                     <td>₱[[formatPrice(entry.amount)]]</td>
                 </template>
-                <template v-if="">
-                    <td></td>
-                </template>
-                <template v-else>
-                    <td></td>
-                </template>
+                <td>[[entry.balance]]</td>
+            </tr>
+            <tr>
+                <td colspan="5" class="text-right"><span class="font-bold font-size-14">TOTAL</span></td>
+                <td>[[account.amount]]</td>
             </tr>
         </tbody>
     </table>
