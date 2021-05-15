@@ -93,8 +93,10 @@ class SaveJournalAPI(APIView):
                 je.child_account.save()
             else:
                 je.child_account.amount -= je.amount
-                je.child_account.save() 
+                je.child_account.save()   
 
+
+        for item in credit:
             je = Journal_Entries()
 
             je.journal = j
