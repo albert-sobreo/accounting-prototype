@@ -110,3 +110,19 @@ class JournalEntriesNestedChildAccountSZ(serializers.ModelSerializer):
     class Meta:
         model = Journal_Entries
         fields = '__all__'
+
+class LedgerSZ(serializers.ModelSerializer):
+    journalEntries = serializers.SerializerMethodField
+    class Meta:
+        model = Child_Account
+        fields = [
+            'code',
+            'name',
+            'account_classfication',
+            'amount',
+            'journalEntries',
+        ]
+    def get_journalEntries(self, thisObj):
+        journalEntries = thisObj.journal_entries_set.all()
+
+        return JournalEntriesNestedChildAccountSZ(instance=journalEntries, many=True).data
