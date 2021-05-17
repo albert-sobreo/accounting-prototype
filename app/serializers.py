@@ -115,9 +115,25 @@ class SubGroupForLedgerSZ(serializers.ModelSerializer):
 class ChildForLedger(serializers.ModelSerializer):
     account_classification = SubGroupForLedgerSZ(read_only=True)
     me = ChildSZ(read_only=True)
+    me_too = serializers.SerializerMethodField()
     class Meta:
         model = Child_Account
-        fields = "__all__"
+        fields = [
+            'id',
+            'code',
+            'name',
+            'account_classification',
+            'me',
+            'contra',
+            'amount',
+            'description',
+            'me_too'
+        ]
+
+    def get_me_too(self, thisObj):
+        me_too = thisObj.me_too()
+
+        return ChildSZ(instance=me_too, many=True).data
 
 class JournalEntriesForLedger(serializers.ModelSerializer):
     journal = JournalSZ(read_only=True)
@@ -143,3 +159,13 @@ class LedgerSZ(serializers.ModelSerializer):
         journalEntries = thisObj.journal_entries_set.all()
 
         return JournalEntriesForLedger(instance=journalEntries, many=True).data
+
+# class ChildSubsidiarySZ(serializers.ModelSerializer):
+#     child_account = ChildSZ
+#     class Meta:[
+#         'id',
+#         'code',
+#         'name',
+#         'amount',
+#         'child_account',
+#     ]

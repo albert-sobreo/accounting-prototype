@@ -24,5 +24,6 @@ urlpatterns = [
     path('', views.chartOfAccounts, name='chartOfAccounts'),
     path('journal/', views.journalView, name='journalView'),
     path('save-journal/', views.SaveJournalAPI.as_view()), 
-    path('ledger/', views.ledgerView, name="ledger")
+    path('ledger/', views.ledgerView, name="ledger"),
+    path('test/', views.testView, name='test')
 ]
