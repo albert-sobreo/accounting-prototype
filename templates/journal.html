@@ -79,7 +79,7 @@
                         <div class="col-3 pl-2">
                             <div class="form-group">
                                 <label>Reference No.</label>
-                                <input v-model="addJournalModal.code" type="text" class="form-control" placeholder="Enter Reference No.">
+                                <input type="text" class="form-control" placeholder="Enter Reference No." :value="addJournalModal.code" @input="addJournalModal.code = $event.target.value.toUpperCase()">
                             </div>
                         </div>
                     </div>
@@ -213,8 +213,10 @@
                     "X-CSRFToken": getCookie('csrftoken')
                 }
             },
+            today: new Date().toISOString().split('T')[0],
+
             addJournalModal: {
-                date: null,
+                date: new Date().toISOString().split('T')[0],
                 retroactive: null,
                 code: null,
                 debit: [{
@@ -277,6 +279,7 @@
             loadData(){
                 axios.get('/api/nested-journal').then(res=>{this.journals=res.data})
                 axios.get('/api/nested-sub').then(res=>{this.subGroups=res.data})
+                console.log(this.today)
             },
             addLineDebit(){
                 this.addJournalModal.debit.push({
@@ -306,7 +309,7 @@
             },
             addJournalModalInitial(){
                 return {
-                    date: null,
+                    date: new Date().toISOString().split('T')[0],
                     retroactive: null,
                     code: null,
                     debit: [{

@@ -32,7 +32,7 @@
             <tr v-for="entry in account.journalEntries">
                 <td>[[entry.journal.date]]</td>
                 <td>[[entry.journal.code]]</td>
-                <td class="font-italic font-regular">[[entry.journal.remarks]]</td>
+                <td class="font-italic font-regular" style="width: 33%">[[entry.journal.remarks]]</td>
                 <template v-if="entry.normally == 'Debit'">
                     <td>₱[[formatPrice(entry.amount)]]</td>
                     <td></td>
