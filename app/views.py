@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django import views
 from django.db.models import query
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.views import View
 from rest_framework import viewsets
 from .serializers import *
@@ -21,6 +21,9 @@ def journalView(request):
 def ledgerView(request):
     return render(request, "ledger.html", {})
 
+def testView(request):
+    print(Child_Account.objects.get(name='Trade Receivables').me_too())
+    return HttpResponse(Child_Account.objects.get(name='Trade Receivables').me_too().name)
 
 
 
@@ -74,6 +77,8 @@ class JournalEntriesNestedAPI(viewsets.ModelViewSet):
 class JournalEntriesNestedChildAccountAPI(viewsets.ModelViewSet):
     serializer_class = JournalEntriesNestedChildAccountSZ
     queryset = Journal_Entries.objects.all().order_by('pk')
+
+
 
 
 

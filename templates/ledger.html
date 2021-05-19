@@ -14,10 +14,8 @@
     <div class="d-flex align-items-center mb-3">
         <span class="font-size-18 font-bold mr-1">Ledger</span>
     </div>
-
     <!-- TABLES -->
     <table v-for="account in ledgers" class="table table-striped table-borderless table-hover box-shadow-medium b-radius-15 mt-2 mb-5">
-        <div hidden>[[bal = 0]]</div>
         <thead class="thead-dark font-size-18">
             <th>[[account.name]]</th>
             <th colspan="99">[[account.account_classification.root_account.code]]-[[account.account_classification.code]]-[[account.code]]</th>
@@ -34,7 +32,7 @@
             <tr v-for="entry in account.journalEntries">
                 <td>[[entry.journal.date]]</td>
                 <td>[[entry.journal.code]]</td>
-                <td class="font-italic font-regular">[[entry.journal.remarks]]</td>
+                <td class="font-italic font-regular" style="width: 33%">[[entry.journal.remarks]]</td>
                 <template v-if="entry.normally == 'Debit'">
                     <td>₱[[formatPrice(entry.amount)]]</td>
                     <td></td>
@@ -43,17 +41,15 @@
                     <td></td>
                     <td>₱[[formatPrice(entry.amount)]]</td>
                 </template>
-                <template v-if="entry.child_account.account_classification.root_account.normally == entry.normally">
-                    <div hidden>[[bal = bal + entry.amount]]</div>
-                    <td>[[bal]]</td>
-                </template>
-                <template v-else>
-                    <div hidden>[[bal = bal - entry.amount]]</div>
-                    <td>[[bal]]</td>
-                </template>
+                <td>[[entry.balance]]</td>
+            </tr>
+            <tr>
+                <td colspan="5" class="text-right"><span class="font-bold font-size-14">TOTAL</span></td>
+                <td>[[account.amount]]</td>
             </tr>
         </tbody>
     </table>
+    <pre>[[ $data ]]</pre>
 </div>
 
 {% endblock %}
@@ -72,6 +68,7 @@
                 }
             }, 
             bal: 0.0,
+            currentRoot: '',
             ledgers: [],
         },
 
@@ -84,6 +81,7 @@
                 })
                 .catch(err=>console.log(err))
             },
+            
             formatPrice(value) {
                 if (this.toggle){
                     return value
@@ -92,9 +90,23 @@
                     return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
             },
-            test(value){
-                return value
-            }
+
+            test(value, root){
+                if (root == this.currentRoot){
+                    this.bal += value
+
+                    return this.bal
+                }
+                if (root != this.currentRoot){
+                    this.bal = 0.0
+                    this.bal += value
+                    this.currentRoot = root
+
+                    return this.bal
+                }
+                //console.log(value, root, this.currentRoot)
+            },
+            
         },
         mounted(){
             this.loadData()

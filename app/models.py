@@ -44,6 +44,10 @@ class Child_Account(models.Model):
     def __str__(self):
         return self.name
 
+    def me_too(self):
+        print(self.child_account_set.all())
+        return (self.child_account_set.all())
+
 class Party(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
