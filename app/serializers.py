@@ -1,10 +1,24 @@
 from rest_framework import serializers
 from .models import *
 
+class Sub_GroupSZ(serializers.ModelSerializer):
+    class Meta:
+        model = Account_Sub_Group
+        fields = "__all__"
+
 class RootSZ(serializers.ModelSerializer):
+    account_sub_group_set = Sub_GroupSZ(many=True, read_only=True)
     class Meta:
         model = Account_Group
-        fields = '__all__'
+        fields = [
+            'id',
+            'code',
+            'name',
+            'normally',
+            'permanence',
+            'amount',
+            'account_sub_group_set'
+        ]
 
 class RootNestedSZ(serializers.ModelSerializer):
     childAccount = serializers.SerializerMethodField()
@@ -30,11 +44,6 @@ class RootNestedSZ(serializers.ModelSerializer):
         subGroup = thisObj.account_sub_group_set.all()
         return Sub_GroupSZ(instance=subGroup, many=True).data
 
-class Sub_GroupSZ(serializers.ModelSerializer):
-    class Meta:
-        model = Account_Sub_Group
-        fields = "__all__"
-
 class Sub_GroupNestedSZ(serializers.ModelSerializer):
     root_account = RootSZ(read_only=True)
     childAccount = serializers.SerializerMethodField()
@@ -55,7 +64,16 @@ class Sub_GroupNestedSZ(serializers.ModelSerializer):
 class ChildSZ(serializers.ModelSerializer):
     class Meta:
         model = Child_Account
-        fields = '__all__'
+        fields = [
+            'id',
+            'code',
+            'name',
+            'contra',
+            'amount',
+            'description',
+            'account_classification',
+            'me',
+        ]
 
 class ChildNestedSZ(serializers.ModelSerializer):
     account_classification = Sub_GroupNestedSZ(read_only=True)
